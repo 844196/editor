@@ -1,0 +1,57 @@
+{
+  "name": "Umi",
+  "description": "Umi is a fork of Honoka which is a Bootstrap theme.",
+  "keywords": [
+    "css",
+    "sass",
+    "bootstrap",
+    "japanese",
+    "theme",
+    "responsive",
+    "front-end",
+    "framework",
+    "web",
+    "lovelive"
+  ],
+  "author": "SAKATA Sinji",
+  "homepage": "https://nkmr6194.github.io/Umi/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/NKMR6194/Umi.git"
+  },
+  "license": "MIT",
+  "moduleType": "globals",
+  "main": [
+    "dist/css/bootstrap.min.css"
+  ],
+  "ignore": [
+    "/.*",
+    "dist/assets",
+    "dist/*.html",
+    "src",
+    "CNAME"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "3.3.6",
+    "bootstrap-sass": "3.3.6"
+  },
+  "exportsOverride": {
+    "bootstrap-sass": {},
+    "bootstrap": {
+      "js": "dist/js/bootstrap.**js",
+      "fonts": "dist/fonts/**/*"
+    },
+    "jquery": {}
+  },
+  "version": "3.3.6-2",
+  "_release": "3.3.6-2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.3.6-2",
+    "commit": "bddd86c29c6e2db3ab52e918c9a0764baf7e42fa"
+  },
+  "_source": "https://github.com/NKMR6194/Umi.git",
+  "_target": "v3.3.6-2",
+  "_originalSource": "Umi"
+}

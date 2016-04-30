@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="assets/vendor/vue/dist/vue.min.js"></script>
+  <script src="assets/vendor/Umi/dist/js/bootstrap.min.js"></script>
+  <script src="assets/vendor/codemirror/lib/codemirror.js"></script>
+  <script src="assets/vendor/codemirror/mode/markdown/markdown.js"></script>
+  <script src="assets/vendor/codemirror/keymap/vim.js"></script>
+  <script src="assets/vendor/highlightjs/highlight.pack.min.js"></script>
+  <script src="assets/vendor/markdown-it/dist/markdown-it.min.js"></script>
+  <script src="assets/vendor/markdown-it-emoji/dist/markdown-it-emoji.min.js"></script>
+  <script src="assets/vendor/markdown-it-footnote/dist/markdown-it-footnote.min.js"></script>
+  <script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <script src="assets/js/markdown_editor.js"></script>
+  <link rel="stylesheet" href="assets/vendor/Umi/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/vendor/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="assets/vendor/codemirror/theme/base16-light.css">
+  <link rel="stylesheet" href="assets/vendor/highlightjs/styles/tomorrow-night.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="markdown-editor">
+<textarea id="content" v-codemirror="content">
+<div class="alert alert-info">
+  <i class="fa fa-info fa-fw"></i>
+  このエディタは おさむん家 Advent Calendar 2014 509日目のエディタです
+</div>
+
+## これは何？
+以下を組み合わせたライブプレビュー＋VimキーバインドのMarkdownエディタです :heart:
+
+### javascript
+* jQuery
+* Vue.js
+* CodeMirror
+* markdown-it
+    * markdown-it-emoji
+    * markdown-it-footnote
+* twemoji
+
+### CSS
+* Bootstrap (Umi)
+* FontAwesome
+* Source Code Pro (WebFont)
+
+
+## 仕組み
+CodeMirrorをVue.jsのカスタムディレクティブとして登録し、あとはチュートリアル通りです。
+
+```javascript
+// codemirror
+codemirror = CodeMirror.fromTextArea(document.getElementById('content'), {
+    mode: 'markdown',
+    // :
+    // :
+});
+
+// directive setup
+Vue.directive('codemirror', {
+    twoWay: true,
+    bind: function() {
+        this.codemirror = codemirror;
+        this.codemirror.on('change', function() {
+            this.set(this.codemirror.getValue());
+        }.bind(this));
+    },
+    update: function(value, oldValue) {
+        this.codemirror.setValue(value || this.el.value);
+    }
+});
+```
+
+```html
+&lt;textarea id="content" v-codemirror="content"&gt;&lt;/textarea&gt;
+<div class="markdown-preview" v-html="content | markdownit"></div>
+```
+
+ただ、チュートリアルではmarked.jsを使ってたんですが、絵文字:sushi:と注脚[^1]を使いたかったのでmarkdown-itを使いました。フィルターの定義に無名関数を渡しています。
+
+[^1]: いえー
+
+```javascript
+// app
+new Vue({
+    el: 'html',
+    data: {
+        content: ''
+    },
+    filters: {
+        markdownit: function(value) {
+            return md.render(value);
+        }
+    }
+});
+```
+
+
+## こぼれ話
+### CodeMirror
+Chromeでエディタ部分にフォーカスすると、実際の行とCodeMirrorの行の表示が一致していなくて、なにか一文字入力しないといけないのが面倒。3年前に治ったぽいんだけど、最近チケットがreopenになってた。
+
+### タスクランナー
+Gulp使おうかなーとずっと思ってたんですが、結局めんどくさくてGuardにしました。
+
+* ブラウザのライブリロード
+* SASSのコンパイル
+* js・CSSのminify
+
+をやってもらってます。
+
+```ruby
+guard 'sass', {
+  :input    => 'src/assets/sass',
+  :output   => 'assets/css/',
+  :compass  => true,
+  :compress => true,
+  :style    => :compressed
+}
+
+guard 'sprockets', :destination => 'assets/js', :asset_paths => 'src/assets/js', :minify => true do
+  watch(%r(^src/assets/js/[^/]+\.js$))
+end
+
+guard 'livereload' do
+  watch(%r{.*})
+end
+```
+
+### Bower
+この間Bower童貞を卒業しました :banana:  
+クッソべんりですねこれ
+
+```json
+{
+  "name": "editor",
+  "authors": [
+    "Masaya Takeda <844196@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "vue": "^1.0.21",
+    "Umi": "v3.3.6-2",
+    "font-awesome": "fontawesome#^4.6.1",
+    "codemirror": "^5.14.2",
+    "markdown-it-emoji": "^1.1.1",
+    "markdown-it-footnote": "^2.0.0",
+    "markdown-it": "^6.0.1",
+    "highlightjs": "^9.2.0"
+  }
+}
+```
+
+```json
+{
+  "directory": "assets/vendor/"
+}
+```
+
+```bash
+$ bower install
+```
+
+### Umi
+![](https://nkmr6194.github.io/Umi/assets/img/sample.png)
+
+Umi[^2]かなりいいですね
+
+[^2]: BootstrapをフォークしたHonokaのフォーク  
+ﾝﾐﾁｭｱ...(・8・)
+
+</textarea>
+    <div class="markdown-preview" v-html="content | markdownit"></div>
+  </div>
+</body>
+</html>

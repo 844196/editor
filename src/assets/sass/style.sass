@@ -1,0 +1,62 @@
+html
+  -webkit-font-smoothing: subpixel-antialiased
+  -moz-osx-font-smoothing: none
+
+.markdown-editor
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+
+  .CodeMirror, .markdown-preview
+    position: absolute
+    padding: 15px
+    width: 50%
+    height: 100%
+
+  .CodeMirror
+    left: 0
+    box-shadow: 1px 0 7px 3px #e7e7e7
+    z-index: 100
+    .CodeMirror-cursor, .cm-animate-fat-cursor
+      background-color: #777
+      border: 1px solid #777
+
+  .markdown-preview
+    padding-left: 25px
+    right: 0
+    overflow-y: auto
+    word-wrap: break-word
+    line-height: 1.7
+    h1, h2, h3, h4, h5, h6
+      color: #2c3e50
+      &:first-child
+        margin-top: 0
+    img
+      max-width: 100%
+      height: auto
+
+    h2
+      margin-top: 1.5em
+      padding:
+        top: 10px
+        bottom: 10px
+        left: 10px
+      border-left: 5px solid #18bc9c
+
+    h3
+      margin-top: 1.3em
+
+    pre
+      border-radius: 2px
+      border: none
+      color: #c5c8c6
+      background-color: #1d1f21
+      padding: 1em
+      code
+        font-family: 'source-code-pro', monospace
+
+    .emoji
+      height: 1.2em
+      vertical-align: sub
